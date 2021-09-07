@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <div class="row">
+    <div class="col"><h1>{% block title %}Login Admin{% endblock %}</h1></div>
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  <div id="logreg-forms">
+    <form class="form-signin text-center" action="" method="POST">
+        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Admin</h1>
+        <input type="text" id="inputLogin" name="username" class="form-control" placeholder="Login" required="" autofocus="">
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Senha" required="">
+        
+        <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        </form>
+        
+  </div>
+
+{% endblock %}

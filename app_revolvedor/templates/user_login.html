@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+<!--
+{% block header %}
+  <div class="row">
+    <div class="col"><h1>{% block title %}Login Agricultor{% endblock %}</h1></div>
+  </div>
+{% endblock %}
+-->
+
+{% block content %}
+
+  <div id="logreg-forms">
+    <form class="form-signin text-center" action="" method="post">
+        <h1 class="h3 mb-3 font-weight-normal" style="text-align: center">Login do Agricultor</h1>
+        <input type="text" id="inputLogin" name="username" class="form-control" placeholder="Login" required="" autofocus="">
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Senha" required="">
+        <select class="form-control" id="inputRevolvedor" name='revolvedor_select'>
+          <option value="" disabled>Selecione um revolvedor</option>
+          {% for item in revolvedores %}
+          <option value="{{ item.id }}">{{ item.nome }}</option>
+          {% endfor %}
+          <!--
+          <option value="1">IFES ITAPINA</option>
+          -->
+        </select>
+        
+        <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+        </form>
+        
+  </div>
+
+{% endblock %}

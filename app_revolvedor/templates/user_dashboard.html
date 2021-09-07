@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <form class="form-inline">
+    <h2 class="m-2 p-2"><strong>Nome Revolvedor</strong></h2>
+    <div class="col m-2 p-2">
+      <label for="start">Data:</label>
+      <input type="date" class="" id="show-date" name="show-date"
+          value="{{ date.strftime('%Y-%m-%d') }}">
+      
+      <fieldset class="form-group">
+        <div class="col m-2">
+          <div class="col-sm-10">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
+              <label class="form-check-label" for="gridRadios1">
+                Ativado
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
+              <label class="form-check-label" for="gridRadios2">
+                Desativado
+              </label>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </form>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <caption>Dados do dia</caption>
+
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Hora</th>
+          <th scope="col">T1</th>
+          <th scope="col">T2</th>
+          <th scope="col">T3</th>
+          <th scope="col">T4</th>
+          <th scope="col">T5</th>
+          <th scope="col">Média</th>
+          <th scope="col">Lig/Des</th>
+          <th scope="col">Motivo</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for medida in revolvedor.medidas %}
+          <tr>
+            <td>{{ medida.hora }}</td>
+            <td>{{ medida.temperaturas[0] }}</td>
+            <td>{{ medida.temperaturas[1] }}</td>
+            <td>{{ medida.temperaturas[2] }}</td>
+            <td>{{ medida.temperaturas[3] }}</td>
+            <td>{{ medida.temperaturas[4] }}</td>
+            <td>{{ medida.media }}</td>
+            <td>{{ 'Ligado' if medida.ligado else 'Desligado' }}</td>
+            <td>{{ medida.motivo }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <!--
+        <tbody>
+        <tr>
+          <td>08:30</td>
+          <td>24.2</td>
+          <td>25.4</td>
+          <td>24.6</td>
+          <td>25.4</td>
+          <td>24.6</td>
+          <td>24.5</td>
+          <td>Desligado</td>
+          <td>Tempo</td>  
+        </tr>
+        <tr>
+          <td>08:40</td>
+          <td>24.2</td>
+          <td>25.4</td>
+          <td>24.6</td>
+          <td>25.4</td>
+          <td>24.6</td>
+          <td>24.5</td>
+          <td>Desligado</td>
+          <td>Tempo</td>  
+        </tr>
+        <tr>
+          <td>08:50</td>
+          <td>23.5</td>
+          <td>25.4</td>
+          <td>25.3</td>
+          <td>32.4</td>
+          <td>25.6</td>
+          <td>24.5</td>
+          <td>Desligado</td>
+          <td>Tempo</td>  
+        </tr>
+        <tr>
+          <td>09:00</td>
+          <td>22.2</td>
+          <td>25.4</td>
+          <td>24.6</td>
+          <td>24.4</td>
+          <td>24.6</td>
+          <td>24.5</td>
+          <td>Desligado</td>
+          <td>Tempo</td>  
+        </tr>
+        <tr>
+          <td>09:05</td>
+          <td>24.2</td>
+          <td>25.4</td>
+          <td>24.6</td>
+          <td>25.4</td>
+          <td>23.6</td>
+          <td>24.5</td>
+          <td>Ligado</td>
+          <td>Temperatura</td>  
+        </tr>
+        <tr>
+          <td>09:10</td>
+          <td>22.2</td>
+          <td>25.4</td>
+          <td>24.6</td>
+          <td>24.4</td>
+          <td>24.6</td>
+          <td>24.5</td>
+          <td>Desligado</td>
+          <td>Temperatura</td>  
+        </tr>
+      </tbody>
+
+      -->
+      
+    </table>
+    
+    <form class="text-center" action="/logout" method="get">
+      <input class="btn btn-danger" type="submit" value="logout" 
+          name="Submit" id="logout" />
+    </form>
+  
+  </div>
+
+
+{% endblock %}
