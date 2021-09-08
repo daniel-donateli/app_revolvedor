@@ -28,18 +28,26 @@ user1 = User(1, 'IFESI', revolvedor1)
 user2 = User(2, 'SATAM', revolvedor2)
 users=[user1, user2]
 
-@app.route('/api/<int:revolvedor_id>', methods=['POST'])
+@app.route('/api/<int:revolvedor_id>', methods=['GET','POST'])
 def api_revolvedor(revolvedor_id):
-  data = request.get_json()
-  if data:
-    if data['hora'] and data['temperaturas'] and data['media'] and data['ligado'] and data['motivo']:
-      revolvedor = get_revolvedor(revolvedor_id)
-      if revolvedor == None:
-        return Response(status=404)
-      revolvedor.add_medida(data['hora'], data['temperaturas'][0], data['temperaturas'][1], data['temperaturas'][2], 
-        data['temperaturas'][3], data['temperaturas'][4], data['media'], data['ligado'], data['motivo'])
-      return Response(status=200)
-  return Response(status=400)
+  if request.method == 'POST':
+    data = request.get_json()
+    print(f'data: {data}')
+    if data:
+      if data['temperaturas'] and data['ligado'] and data['motivo']:
+        revolvedor = get_revolvedor(revolvedor_id)
+        if revolvedor == None:
+          return Response(status=404)
+        #revolvedor.add_medida(data['hora'], data['temperaturas'][0], data['temperaturas'][1], data['temperaturas'][2], 
+        #  data['temperaturas'][3], data['temperaturas'][4], data['media'], data['ligado'], data['motivo'])
+        return Response(status=200)
+    return Response(status=400)
+  if request.method == 'GET':
+    return {
+      'temperaturas': [],
+      'ligado': True,
+      'motivo': ''
+    }
 
 @app.route('/')
 def index():
