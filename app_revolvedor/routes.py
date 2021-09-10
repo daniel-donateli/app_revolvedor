@@ -16,6 +16,8 @@ from app_revolvedor import db
 
 app.secret_key = os.getenv('SECRET_KEY')
 
+LIGAR = False
+
 date_time = datetime.datetime.now()
 revolvedor1 = Revolvedor(1, 'IFES CAMPUS ITAPINA')
 revolvedor1.add_medida('08:30', 24.2, 25.4, 24.6, 25.4, 24.6, 24.5, False, 'Tempo')
@@ -45,7 +47,7 @@ def api_revolvedor(revolvedor_id):
 def index():
   if 'user_id' in session:
     user = db.get_user(session['user_id'])
-    return render_template('user_dashboard.html', date=date_time, revolvedor=user.revolvedor)
+    return render_template('user_dashboard.html', date=date_time, revolvedor=user.revolvedor, ligado=True)
   return redirect(url_for('user_login'))
 
 @app.route('/login', methods=['GET', 'POST'])
