@@ -2,11 +2,11 @@
 
 {% block content %}
 
-  <form class="form-inline">
-    <h2 class="m-2 p-2"><strong>Nome Revolvedor</strong></h2>
+  <form action="/change_date" method="POST" class="form-inline">
+    <h2 class="m-2 p-2"><strong>{{ revolvedor.nome }}</strong></h2>
     <div class="col m-2 p-2">
       <label for="start">Data:</label>
-      <input type="date" class="" id="show-date" name="show-date"
+      <input type="date" class="" id="date-picker" name="date-picker"
           value="{{ date.strftime('%Y-%m-%d') }}">
       
       <fieldset class="form-group">
@@ -26,18 +26,27 @@
               </label>
             </div>
             -->
-            <button class="btn btn-primary">
-              {% if ligado %}
-                Desligar
-              {% else %}
-                Ligar
-              {% endif %}
-            </button>
+            <button class="btn btn-primary">Mudar Data</button>
           </div>
         </div>
       </fieldset>
     </div>
   </form>
+
+  <form action="/turn_on_off" method="POST">
+    <button name="switch-btn" id="switch-btn" class="btn btn-primary" 
+              {% if ligado %}
+              value="Desligar"
+            >
+                Desligar
+              {% else %}
+              value="Ligar"
+            >
+                Ligar
+              {% endif %}
+            </button>
+  </form>
+  
 
   <div class="table-responsive">
     <table class="table table-bordered table-hover">
@@ -58,15 +67,15 @@
       </thead>
 
       <tbody>
-        {% for medida in revolvedor.medidas %}
+        {% for medida in medidas %}
           <tr>
-            <td>{{ medida.hora }}</td>
-            <td>{{ medida.temperaturas[0] }}</td>
-            <td>{{ medida.temperaturas[1] }}</td>
-            <td>{{ medida.temperaturas[2] }}</td>
-            <td>{{ medida.temperaturas[3] }}</td>
-            <td>{{ medida.temperaturas[4] }}</td>
-            <td>{{ medida.media }}</td>
+            <td>{{ medida.date.strftime('%H:%M') }}</td>
+            <td>{{ medida.t1 }}</td>
+            <td>{{ medida.t2 }}</td>
+            <td>{{ medida.t3 }}</td>
+            <td>{{ medida.t4 }}</td>
+            <td>{{ medida.t5 }}</td>
+            <td>{{ "%.1f"|format(medida.media) }}</td>
             <td>{{ 'Ligado' if medida.ligado else 'Desligado' }}</td>
             <td>{{ medida.motivo }}</td>
           </tr>

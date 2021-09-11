@@ -2,7 +2,6 @@ from flask import Flask
 import os
 from dotenv import load_dotenv
 from app_revolvedor import db
-#from flask_login import LoginManager
 
 load_dotenv()
 
@@ -16,7 +15,9 @@ def create_app():
 
 __version__ = '0.1.0'
 app = create_app()
-#login_manager = LoginManager()
-#login_manager.init_app(app)
 
 import app_revolvedor.routes
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.db_session.remove()

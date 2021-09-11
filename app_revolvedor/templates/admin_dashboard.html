@@ -40,37 +40,11 @@
         </tr>
       </thead>
       <tbody>
-        <!--
+        {% for revolvedor in revolvedores %}
         <tr>
-          <td>1</td>
-          <td>IFES ITAPINA</td>
-          <td>IFESI</td>
-          <td>****</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>SANTA MARIA</td>
-          <td>SATAM</td>
-          <td>****</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>JOANA LIRA</td>
-          <td>JOANAL</td>
-          <td>****</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>FAZENDA PULINI</td>
-          <td>FPULINII</td>
-          <td>****</td>
-        </tr>
-        -->
-        {% for user in users %}
-        <tr>
-          <td>{{ user.revolvedor.id }}</td>
-          <td>{{ user.revolvedor.nome }}</td>
-          <td>{{ user.login }}</td>
+          <td>{{ revolvedor.id_revolvedor }}</td>
+          <td>{{ revolvedor.nome }}</td>
+          <td>{{ revolvedor.login }}</td>
         </tr>
         {% endfor %}
       </tbody>

@@ -1,37 +1,27 @@
-from app_revolvedor.domain import revolvedor
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
+
 from app_revolvedor.domain.revolvedor import Revolvedor
 from app_revolvedor.domain.user import User
 
-users = []
-revolvedores = []
+engine = create_engine('sqlite:///./banco.db', future=True)
+db_session = scoped_session(sessionmaker(autocommit=False,
+                                         autoflush=False,
+                                         bind=engine))
+
+Base = declarative_base()
+Base.query = db_session.query_property()
+
+
+from app_revolvedor.domain.models import Revolvedor
 
 def init_db():
-  revolvedor1 = Revolvedor(1, 'IFES CAMPUS ITAPINA')
-  revolvedor1.add_medida('08:30', 24.2, 25.4, 24.6, 25.4, 24.6, 24.5, False, 'Tempo')
-  revolvedor1.add_medida('08:40', 24.2, 25.4, 24.6, 25.4, 24.6, 24.5, False, 'Tempo')
-  revolvedor2 = Revolvedor(2, 'SANTA MARIA')
-  revolvedor2.add_medida('08:30', 24.2, 25.4, 24.6, 25.4, 24.6, 24.5, False, 'Tempo')
-  revolvedor2.add_medida('08:40', 24.2, 25.4, 24.6, 25.4, 24.6, 24.5, False, 'Tempo')
-  #revolvedores = [revolvedor1, revolvedor2]
-  revolvedores.append(revolvedor1)
-  revolvedores.append(revolvedor2)
-  user1 = User(1, 'IFESI', revolvedor1)
-  user2 = User(2, 'SATAM', revolvedor2)
-  #users = [user1, user2]
-  users.append(user1)
-  users.append(user2)
+  import app_revolvedor.domain.models
 
-def get_users():
-  return users
+  Base.metadata.create_all(bind=engine)
+  
 
-def get_user(user_id):
-  for user in users:
-    if user_id == user.id:
-      return user
-  return None
-
-def add_user(username, senha, nome_revolvedor):
-  id = len(users) + 1
-  revolvedor = Revolvedor(len(revolvedores), nome_revolvedor)
-  user = User(id, username, revolvedor)
-  users.append(user)
+def get_revolvedor(revolvedor_id):
+  #return Revolvedor.query.filter(Revolvedor.id_revolvedor == revolvedor_id)
+  return Revolvedor.query.get(revolvedor_id)
