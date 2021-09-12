@@ -4,47 +4,13 @@
 
   <form action="/change_date" method="POST" class="form-inline">
     <h2 class="m-2 p-2"><strong>{{ revolvedor.nome }}</strong></h2>
-    <div class="col m-2 p-2">
+    <div class="col-sm m-2 p-2 text-center">
       <label for="start">Data:</label>
       <input type="date" class="" id="date-picker" name="date-picker"
           value="{{ date.strftime('%Y-%m-%d') }}">
       
-      <fieldset class="form-group">
-        <div class="col m-2">
-          <div class="col-sm-10">
-            <!--
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-              <label class="form-check-label" for="gridRadios1">
-                Ativado
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-              <label class="form-check-label" for="gridRadios2">
-                Desativado
-              </label>
-            </div>
-            -->
-            <button class="btn btn-primary">Mudar Data</button>
-          </div>
-        </div>
-      </fieldset>
+            <button class="btn btn-secondary m-2">Mudar Data</button>
     </div>
-  </form>
-
-  <form action="/turn_on_off" method="POST">
-    <button name="switch-btn" id="switch-btn" class="btn btn-primary" 
-              {% if ligado %}
-              value="Desligar"
-            >
-                Desligar
-              {% else %}
-              value="Ligar"
-            >
-                Ligar
-              {% endif %}
-            </button>
   </form>
   
 
@@ -69,7 +35,7 @@
       <tbody>
         {% for medida in medidas %}
           <tr>
-            <td>{{ medida.date.strftime('%H:%M') }}</td>
+            <td>{{ medida.time.strftime('%H:%M') }}</td>
             <td>{{ medida.t1 }}</td>
             <td>{{ medida.t2 }}</td>
             <td>{{ medida.t3 }}</td>
@@ -84,7 +50,21 @@
       
     </table>
     
-    <form class="text-center" action="/logout" method="get">
+    <form class="text-center m-2" action="/turn_on_off" method="POST">
+      <button name="switch-btn" id="switch-btn" class="btn btn-primary" 
+                {% if ligado %}
+                value="Desligar"
+              >
+                  Desligar
+                {% else %}
+                value="Ligar"
+              >
+                  Ligar
+                {% endif %}
+              </button>
+    </form>
+
+    <form class="text-center m-2" action="/logout" method="get">
       <input class="btn btn-danger" type="submit" value="logout" 
           name="Submit" id="logout" />
     </form>

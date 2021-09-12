@@ -22,6 +22,6 @@ def init_db():
   Base.metadata.create_all(bind=engine)
   
 
-def get_revolvedor(revolvedor_id):
+def get_revolvedor(revolvedor_id) -> Revolvedor:
   #return Revolvedor.query.filter(Revolvedor.id_revolvedor == revolvedor_id)
   return Revolvedor.query.get(revolvedor_id)

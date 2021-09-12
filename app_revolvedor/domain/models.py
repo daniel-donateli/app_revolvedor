@@ -1,7 +1,8 @@
+import datetime
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import DATETIME, NUMERIC, Boolean
+from sqlalchemy.sql.sqltypes import DATE, DATETIME, NUMERIC, TIME, Boolean
 from app_revolvedor.db import Base
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -29,10 +30,14 @@ class Revolvedor(Base):
     }
 
   def get_medidas(self):
-    return Medida.query.filter(Medida.id_revolvedor == self.id_revolvedor).order_by(Medida.date.asc())
+    return Medida.query.filter(Medida.id_revolvedor == self.id_revolvedor).order_by(Medida.time.asc())
   
-  def get_medidas_by_date():
-    pass
+  def get_medidas_by_date(self, date):
+    if isinstance(date, datetime.datetime):
+      date_time = date.date()
+    else:
+      date_time = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    return Medida.query.filter(Medida.id_revolvedor == self.id_revolvedor, Medida.date == date_time)
 
   def verificar_senha(self , senha):
     return check_password_hash(self.senha, senha)
@@ -41,7 +46,8 @@ class Revolvedor(Base):
 class Medida(Base):
   __tablename__ = 'medida'
   id_medida = Column(Integer, primary_key=True)
-  date = Column(DATETIME)
+  date = Column(DATE)
+  time = Column(TIME)
   t1 = Column(NUMERIC(3, 1, asdecimal=False))
   t2 = Column(NUMERIC(3, 1, asdecimal=False))
   t3 = Column(NUMERIC(3, 1, asdecimal=False))
@@ -64,4 +70,16 @@ class Medida(Base):
     self.t5 = temperaturas[4]
     self.ligado = ligado
     self.motivo = motivo
-    self.date = datetime
+    self.date = datetime.date()
+    self.time = datetime.time()
+  
+  def as_dict(self):
+    return {
+      'id_medida': self.id_medida,
+      'id_revolvedor': self.id_revolvedor,
+      'media': self.media,
+      'temperaturas': [self.t1, self.t2, self.t3, self.t4, self.t5],
+      'ligado': self.ligado,
+      'motivo': self.motivo,
+      'date': self.date
+    }

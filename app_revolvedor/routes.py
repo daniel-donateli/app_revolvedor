@@ -18,7 +18,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 LIGAR = False
 
-date_time = datetime.datetime.now()
+date_time = datetime.datetime.today()
 
 @app.route('/api/<int:revolvedor_id>', methods=['GET','POST'])
 def api_revolvedor(revolvedor_id):
@@ -49,7 +49,7 @@ def api_revolvedor(revolvedor_id):
 def index():
   if 'revolvedor_id' in session:
     revolvedor = db.get_revolvedor(session['revolvedor_id'])
-    return render_template('user_dashboard.html', date=date_time, revolvedor=revolvedor, ligado=LIGAR , medidas=revolvedor.get_medidas())
+    return render_template('user_dashboard.html', date=date_time, revolvedor=revolvedor, ligado=LIGAR , medidas=revolvedor.get_medidas_by_date(date_time))
   return redirect(url_for('user_login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -106,14 +106,26 @@ def on_off():
   else:
     LIGAR = False
   #return redirect(url_for('index'))
-  return render_template('user_dashboard.html', date=date_time, revolvedor=revolvedor, ligado=LIGAR , medidas=db.get_revolvedor(session['revolvedor_id']).get_medidas())
+  return render_template('user_dashboard.html', date=date_time, revolvedor=revolvedor, ligado=LIGAR , medidas=db.get_revolvedor(session['revolvedor_id']).get_medidas_by_date(date_time))
 
 @app.route('/change_date', methods=['POST'])
 def change_date():
   value = request.form['date-picker']
   date = datetime.datetime.strptime(value, '%Y-%m-%d')
-  return render_template('user_dashboard.html', date=date, revolvedor=revolvedor, ligado=LIGAR , medidas=db.get_revolvedor(session['revolvedor_id']).get_medidas())
+  return render_template('user_dashboard.html', date=date, revolvedor=revolvedor, ligado=LIGAR , medidas=db.get_revolvedor(session['revolvedor_id']).get_medidas_by_date(date))
 
+@app.route('/api/<int:revolvedor_id>/get_date/<string:date>')
+def get_by_date(revolvedor_id, date):
+  revolvedor = db.get_revolvedor(revolvedor_id)
+  return {'data': date, 'medidas': [r.as_dict() for r in revolvedor.get_medidas_by_date(date)]}
+
+@app.route('/api/<int:revolvedor_id>/delete')
+def delete_revolvedor(revolvedor_id):
+  revolvedor = db.get_revolvedor(revolvedor_id)
+  db.db_session.delete(revolvedor)
+  db.db_session.commit()
+  #return Response(status=200)
+  return redirect(url_for('admin_login'))
 
 def validate_login(username, password, id_revolvedor):
   revolvedor = db.get_revolvedor(id_revolvedor)

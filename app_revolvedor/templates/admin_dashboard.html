@@ -36,6 +36,7 @@
           <th scope="col">idRevolvedor</th>
           <th scope="col">Nome</th>
           <th scope="col">Login</th>
+          <th></th>
           <!--<th scope="col">Senha</th> -->
         </tr>
       </thead>
@@ -45,6 +46,7 @@
           <td>{{ revolvedor.id_revolvedor }}</td>
           <td>{{ revolvedor.nome }}</td>
           <td>{{ revolvedor.login }}</td>
+          <td class="text-center"><a href="/api/{{ revolvedor.id_revolvedor }}/delete" title="Apagar"><i class="bi bi-trash text-danger"></i></a></td>
         </tr>
         {% endfor %}
       </tbody>
