@@ -2,9 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-from app_revolvedor.domain.revolvedor import Revolvedor
-from app_revolvedor.domain.user import User
-
 engine = create_engine('sqlite:///./banco.db', future=True)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
@@ -23,5 +20,4 @@ def init_db():
   
 
 def get_revolvedor(revolvedor_id) -> Revolvedor:
-  #return Revolvedor.query.filter(Revolvedor.id_revolvedor == revolvedor_id)
   return Revolvedor.query.get(revolvedor_id)

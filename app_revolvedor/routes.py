@@ -1,4 +1,3 @@
-from app_revolvedor.domain import revolvedor
 from app_revolvedor.domain.models import Medida, Revolvedor
 from flask.helpers import url_for
 from flask import Response
@@ -16,29 +15,44 @@ from app_revolvedor import db
 
 app.secret_key = os.getenv('SECRET_KEY')
 
+ADMIN = os.getenv('ADMIN_LOGIN')
+PASSWORD = os.getenv('ADMIN_PASSWORD')
+
 LIGAR = False
 
 date_time = datetime.datetime.today()
 
+# Endpoint para receber os dados do revolvedor
 @app.route('/api/<int:revolvedor_id>', methods=['GET','POST'])
 def api_revolvedor(revolvedor_id):
   if request.method == 'POST':
-    request_time = datetime.datetime.now()
+    request_time = datetime.datetime.now() # Armazenar o tempo em que recebeu a requisição HTTP
     data = request.get_json()
+
+    # Validar dados
     if data:
       if data['temperaturas'] and data['motivo']:
-        revolvedor = db.get_revolvedor(revolvedor_id)
+        revolvedor = db.get_revolvedor(revolvedor_id) # Buscar no banco de dados o revolvedor que enviou a requisição
+
+        # Resposta em caso de não encontrar o revolvedor
         if revolvedor == None:
           return Response(status=404)
+
+        # Incrementar o id
         novo_id = 1
         novo_id += len(Medida.query.all())
-        global LIGAR
-        LIGAR = data['ligado']
+
+        # Criar novo conjunto de medidas
         m = Medida(id_medida=novo_id, id_revolvedor=revolvedor_id, temperaturas=data['temperaturas'], ligado=LIGAR, motivo=data['motivo'], datetime=request_time)
+
+        # Registrar no banco de dados
         db.db_session.add(m)
         db.db_session.commit()
-        return Response(status=200)
-    return Response(status=400)
+
+        return Response(status=200) # Resposta em caso de sucesso
+    return Response(status=400) # Resposta em caso de requisição inválida
+  
+  # Retornar o estado do revolvedor
   if request.method == 'GET':
     if LIGAR:
       return 'Ligar'
@@ -101,16 +115,18 @@ def admin_logout():
 @app.route('/turn_on_off', methods=['POST'])
 def on_off():
   value = request.form['switch-btn']
+  revolvedor = db.get_revolvedor(session['revolvedor_id'])
+  global LIGAR
   if value == 'Ligar':
     LIGAR = True
   else:
     LIGAR = False
-  #return redirect(url_for('index'))
-  return render_template('user_dashboard.html', date=date_time, revolvedor=revolvedor, ligado=LIGAR , medidas=db.get_revolvedor(session['revolvedor_id']).get_medidas_by_date(date_time))
+  return redirect(url_for('index'))
 
 @app.route('/change_date', methods=['POST'])
 def change_date():
   value = request.form['date-picker']
+  revolvedor = db.get_revolvedor(session['revolvedor_id'])
   date = datetime.datetime.strptime(value, '%Y-%m-%d')
   return render_template('user_dashboard.html', date=date, revolvedor=revolvedor, ligado=LIGAR , medidas=db.get_revolvedor(session['revolvedor_id']).get_medidas_by_date(date))
 
@@ -124,7 +140,6 @@ def delete_revolvedor(revolvedor_id):
   revolvedor = db.get_revolvedor(revolvedor_id)
   db.db_session.delete(revolvedor)
   db.db_session.commit()
-  #return Response(status=200)
   return redirect(url_for('admin_login'))
 
 def validate_login(username, password, id_revolvedor):
@@ -134,7 +149,7 @@ def validate_login(username, password, id_revolvedor):
   return False
 
 def validate_admin(username, password):
-  if username == 'admin' and password == '123456':
+  if username == ADMIN and password == PASSWORD:
     return True
   return False
 
